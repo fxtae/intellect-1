@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Intellect - Messenger</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+ <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+body {
+    background: #0f0f0f;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-container {
+    width: 100%;
+    height: 100vh;
+    max-width: 1400px;
+    background: #1f1f1f;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Screens */
+.screen {
+    display: none;
+    height: 100%;
+    width: 100%;
+    flex: 1;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ==================== TELEGRAM STYLE SIDEBAR ==================== */
+.sidebar {
+    width: 380px;
+    background: #1f1f1f;
+    border-right: 1px solid #2f2f2f;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+.sidebar-header {
+    padding: 15px;
+    background: #1f1f1f;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #2a6d9c, #1e4a6f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.username {
+    font-weight: 500;
+    font-size: 16px;
+    color: #fff;
+}
+
+.header-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.icon-btn:hover {
+    color: #2a6d9c;
+}
+
+.premium-icon {
+    color: #ffd700;
+}
+
+/* Search Container */
+.search-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8e8e8e;
+    font-size: 14px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background: #2f2f2f;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 15px;
+}
+
+.search-input::placeholder {
+    color: #8e8e8e;
+}
+
+.search-input:focus {
+    outline: none;
+    background: #3a3a3a;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+}
+
+.filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    background: #2f2f2f;
+    border: none;
+    border-radius: 20px;
+    color: #8e8e8e;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-btn.active {
+    background: #2a6d9c;
+    color: white;
+}
+
+.filter-count {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 11px;
+}
+
+/* Birthday Banner */
+.birthday-banner {
+    margin: 10px 15px;
+    padding: 12px;
+    background: #2f2f2f;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.birthday-banner:hover {
+    background: #3a3a3a;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.banner-content i {
+    color: #ffd700;
+    font-size: 20px;
+}
+
+.banner-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.banner-text strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+.banner-text span {
+    color: #8e8e8e;
+    font-size: 12px;
+}
+
+/* Archived Section */
+.archived-section {
+    margin: 10px 15px;
+    padding: 12px;
+    background: #2f2f2f;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.archived-section:hover {
+    background: #3a3a3a;
+}
+
+.archived-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.archived-content i {
+    color: #8e8e8e;
+    font-size: 20px;
+}
+
+.archived-content span {
+    color: #fff;
+    font-size: 15px;
+}
+
+.story-badge {
+    background: #ffd700;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Chats List */
+.chats-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 15px;
+}
+
+.chats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+    position: relative;
+}
+
+.chat-item:hover {
+    background: #2f2f2f;
+}
+
+.chat-item.active {
+    background: #2a6d9c;
+}
+
+.chat-avatar {
+    width: 54px;
+    height: 54px;
+    background: linear-gradient(135deg, #2a6d9c, #1e4a6f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    position: relative;
+}
+
+.chat-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.chat-name {
+    font-weight: 600;
+    color: #fff;
+    font-size: 16px;
+}
+
+.chat-time {
+    color: #8e8e8e;
+    font-size: 12px;
+}
+
+.chat-last-message {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #8e8e8e;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-badge {
+    background: #2a6d9c;
+    color: white;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+}
+
+.subscriber-badge {
+    font-size: 11px;
+    color: #8e8e8e;
+    margin-left: 5px;
+}
+
+/* Pinned Message in Chat Item */
+.pinned-indicator {
+    color: #ffd700;
+    font-size: 10px;
+    margin-right: 4px;
+}
+
+/* Chat Area */
+.chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.chat-header {
+    padding: 15px 20px;
+    background: #1f1f1f;
+    border-bottom: 1px solid #2f2f2f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chat-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #2a6d9c, #1e4a6f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.chat-details h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.subscriber-count {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+
+.typing-status {
+    font-size: 12px;
+    color: #2a6d9c;
+    font-style: italic;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.premium-star {
+    color: #ffd700;
+}
+
+/* Messages Container */
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Pinned Message at Top */
+.pinned-message-container {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #2f2f2f;
+    padding-bottom: 15px;
+}
+
+.pinned-message {
+    background: #2f2f2f;
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.pinned-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #ffd700;
+    font-size: 13px;
+}
+
+.pinned-content {
+    color: #8e8e8e;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Message Bubbles */
+.message {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease;
+}
+
+.message.sent {
+    align-self: flex-end;
+}
+
+.message.received {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 10px 14px;
+    border-radius: 18px;
+    position: relative;
+    word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.message.sent .message-content {
+    background: #2a6d9c;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.received .message-content {
+    background: #2f2f2f;
+    color: #fff;
+    border-bottom-left-radius: 4px;
+}
+
+.message-time {
+    font-size: 11px;
+    margin-top: 4px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #8e8e8e;
+}
+
+.message.sent .message-time {
+    justify-content: flex-end;
+}
+
+/* YouTube Link Styling */
+.youtube-link {
+    margin-top: 8px;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+.youtube-thumbnail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.youtube-thumbnail i {
+    color: #ff0000;
+    font-size: 30px;
+}
+
+.youtube-info {
+    flex: 1;
+}
+
+.youtube-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.youtube-channel {
+    font-size: 12px;
+    color: #8e8e8e;
+}
+
+/* Premium Panel */
+.premium-panel {
+    position: absolute;
+    right: 20px;
+    top: 80px;
+    width: 320px;
+    background: #2f2f2f;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    z-index: 100;
+    border: 1px solid #3f3f3f;
+}
+
+.premium-panel.hidden {
+    display: none;
+}
+
+.premium-header {
+    padding: 15px;
+    border-bottom: 1px solid #3f3f3f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #ffd700, #ffa500);
+    color: #000;
+    border-radius: 12px 12px 0 0;
+}
+
+.premium-header button {
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.premium-features-list {
+    padding: 15px;
+}
+
+.premium-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s;
+    color: #fff;
+}
+
+.premium-feature-item:hover {
+    background: #3f3f3f;
+}
+
+.feature-badge {
+    margin-left: auto;
+    background: #2a6d9c;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+}
+
+/* Message Input */
+.message-input-container {
+    padding: 15px 20px;
+    background: #1f1f1f;
+    border-top: 1px solid #2f2f2f;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.attach-btn, .send-btn, .mic-btn, .emoji-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: #2f2f2f;
+    color: #8e8e8e;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-btn {
+    background: #2a6d9c;
+    color: white;
+}
+
+.send-btn:hover {
+    background: #1e4a6f;
+}
+
+.input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    background: #2f2f2f;
+    border: 1px solid #3f3f3f;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 15px;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #2a6d9c;
+}
+
+.emoji-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Attachment Menu */
+.attachment-menu {
+    position: absolute;
+    bottom: 90px;
+    left: 20px;
+    background: #2f2f2f;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    border: 1px solid #3f3f3f;
+}
+
+.attachment-menu button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s;
+    color: #fff;
+    min-width: 70px;
+}
+
+.attachment-menu button:hover {
+    background: #3f3f3f;
+}
+
+.attachment-menu i {
+    font-size: 20px;
+    color: #2a6d9c;
+}
+
+.attachment-menu span {
+    font-size: 11px;
+}
+
+/* Bottom Navigation (Telegram Style) */
+.bottom-nav {
+    display: none;
+    height: 60px;
+    background: #1f1f1f;
+    border-top: 1px solid #2f2f2f;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    transition: color 0.3s;
+}
+
+.nav-item i {
+    font-size: 20px;
+}
+
+.nav-item.active {
+    color: #2a6d9c;
+}
+
+.nav-item span {
+    font-size: 11px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #2f2f2f;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: #fff;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #3f3f3f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header button {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Pricing Cards */
+.pricing-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pricing-card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    background: #1f1f1f;
+    border: 1px solid #3f3f3f;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.pricing-card.popular {
+    border-color: #ffd700;
+    transform: scale(1.05);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffd700;
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin: 15px 0;
+}
+
+.price span {
+    font-size: 14px;
+    color: #8e8e8e;
+}
+
+.features-list {
+    list-style: none;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.features-list li {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8e8e8e;
+}
+
+.features-list i {
+    color: #2a6d9c;
+}
+
+.btn-premium {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #2a6d9c, #1e4a6f);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 100%;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .bottom-nav {
+        display: flex;
+    }
+    
+    .message {
+        max-width: 85%;
+    }
+    
+    .back-btn.mobile-only {
+        display: block;
+    }
+    
+    .pricing-cards {
+        flex-direction: column;
+    }
+    
+    .pricing-card.popular {
+        transform: scale(1);
+    }
+    
+    .attachment-menu {
+        flex-wrap: wrap;
+        width: 200px;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1f1f1f;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3f3f3f;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
+}
+
+/* Utility Classes */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+}
+
+.no-messages {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8e8e8e;
+    font-style: italic;
+}
+</style>
+<body>
+    <div class="app-container">
+        <!-- Login Screen (same as before) -->
+        <div id="loginScreen" class="screen active">
+            <!-- ... keep previous login HTML ... -->
+        </div>
+
+        <!-- Main Chat Screen - Telegram Style -->
+        <div id="mainScreen" class="screen">
+            <!-- Left Sidebar - Chats List (Telegram Style) -->
+            <div class="sidebar" id="sidebar">
+                <!-- Header with Profile and Search -->
+                <div class="sidebar-header">
+                    <div class="header-top">
+                        <div class="user-profile" onclick="toggleProfileMenu()">
+                            <div class="avatar" id="currentUserAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="username" id="currentUsername">Loading...</span>
+                        </div>
+                        <div class="header-actions">
+                            <button class="icon-btn" onclick="togglePremiumModal()">
+                                <i class="fas fa-crown premium-icon"></i>
+                            </button>
+                            <button class="icon-btn" onclick="toggleSidebar()">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search Chats" onkeyup="searchChats(this.value)">
+                    </div>
+
+                    <!-- Chat Filters -->
+                    <div class="filter-tabs" id="filterTabs">
+                        <button class="filter-btn active" onclick="filterChats('all')">All <span class="filter-count">4</span></button>
+                        <button class="filter-btn" onclick="filterChats('fx-tae')">Fx TAE</button>
+                        <button class="filter-btn" onclick="filterChats('personal')">Personal</button>
+                        <button class="filter-btn" onclick="filterChats('unread')">Unread</button>
+                        <button class="filter-btn" onclick="filterChats('finance')">Finance</button>
+                    </div>
+                </div>
+
+                <!-- Birthday Banner -->
+                <div class="birthday-banner" onclick="showBirthday()">
+                    <div class="banner-content">
+                        <i class="fas fa-birthday-cake"></i>
+                        <div class="banner-text">
+                            <strong>Add your birthday!</strong>
+                            <span>Let your contacts know when you're celebrating</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <!-- Archived Chats -->
+                <div class="archived-section" onclick="openArchived()">
+                    <div class="archived-content">
+                        <i class="fas fa-archive"></i>
+                        <span>Archived Chats</span>
+                    </div>
+                    <div class="story-badge">1 Story</div>
+                </div>
+
+                <!-- Chats List Container -->
+                <div class="chats-list-container">
+                    <div class="chats-list" id="chatsList">
+                        <!-- Chats will be populated here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Chat Area -->
+            <div class="chat-area">
+                <!-- Chat Header -->
+                <div class="chat-header" id="chatHeader">
+                    <div class="chat-info">
+                        <button class="back-btn mobile-only" onclick="toggleSidebar()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="chat-avatar">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="chat-details">
+                            <h3 id="currentChatName">MOBILE FOREX - Free Forex SIGNALS & Strategies</h3>
+                            <span class="subscriber-count" id="subscriberCount">18.5K subscribers</span>
+                            <span class="typing-status" id="typingStatus"></span>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="icon-btn" onclick="searchChat()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="icon-btn" onclick="togglePremiumFeatures()">
+                            <i class="fas fa-star premium-star"></i>
+                        </button>
+                        <button class="icon-btn" onclick="showMenu()">
+                            <i class="fas fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Pinned Message -->
+                    <div class="pinned-message-container" id="pinnedMessageContainer">
+                        <div class="pinned-message">
+                            <div class="pinned-header">
+                                <i class="fas fa-thumbtack"></i>
+                                <span>Pinned Message</span>
+                            </div>
+                            <div class="pinned-content">
+                                Exness is my Favorite Forex Broker of Choice right now with leverage option 1:2000 I can maximize profits for me and my s...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages will be inserted here -->
+                </div>
+
+                <!-- Premium Features Panel -->
+                <div class="premium-panel hidden" id="premiumPanel">
+                    <div class="premium-header">
+                        <h4><i class="fas fa-crown"></i> Premium Features</h4>
+                        <button onclick="togglePremiumFeatures()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="premium-features-list">
+                        <div class="premium-feature-item" onclick="showPinnedMessages()">
+                            <i class="fas fa-thumbtack"></i>
+                            <span>20 Pinned Messages</span>
+                            <span class="feature-badge">Active</span>
+                        </div>
+                        <div class="premium-feature-item" onclick="scheduleMessage()">
+                            <i class="fas fa-clock"></i>
+                            <span>Schedule Messages</span>
+                        </div>
+                        <div class="premium-feature-item" onclick="incognitoMode()">
+                            <i class="fas fa-user-secret"></i>
+                            <span>Incognito Mode</span>
+                        </div>
+                        <div class="premium-feature-item" onclick="customThemes()">
+                            <i class="fas fa-palette"></i>
+                            <span>Custom Themes</span>
+                        </div>
+                        <div class="premium-feature-item" onclick="voiceTranscription()">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Transcription</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input Area -->
+                <div class="message-input-container">
+                    <button class="attach-btn" onclick="showAttachmentMenu()">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <div class="input-wrapper">
+                        <input type="text" 
+                               id="messageInput" 
+                               placeholder="Message" 
+                               onkeyup="checkTyping()"
+                               onkeypress="handleMessageKeyPress(event)">
+                        <button class="emoji-btn" onclick="showEmojiPicker()">
+                            <i class="far fa-smile"></i>
+                        </button>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="mic-btn hidden" id="micButton" onclick="startVoiceRecording()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+
+                <!-- Attachment Menu -->
+                <div class="attachment-menu hidden" id="attachmentMenu">
+                    <button onclick="attachImage()">
+                        <i class="fas fa-image"></i>
+                        <span>Image</span>
+                    </button>
+                    <button onclick="attachFile()">
+                        <i class="fas fa-file"></i>
+                        <span>File</span>
+                    </button>
+                    <button onclick="attachLocation()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Location</span>
+                    </button>
+                    <button onclick="attachContact()">
+                        <i class="fas fa-address-book"></i>
+                        <span>Contact</span>
+                    </button>
+                    <button onclick="attachPoll()">
+                        <i class="fas fa-poll"></i>
+                        <span>Poll</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Modal -->
+        <div id="premiumModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-crown"></i> Upgrade to Premium</h2>
+                    <button onclick="togglePremiumModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="pricing-cards">
+                        <div class="pricing-card">
+                            <h3>Monthly</h3>
+                            <div class="price">$4.99<span>/month</span></div>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> 20 Pinned Messages</li>
+                                <li><i class="fas fa-check"></i> Schedule Messages</li>
+                                <li><i class="fas fa-check"></i> Incognito Mode</li>
+                                <li><i class="fas fa-check"></i> Custom Themes</li>
+                                <li><i class="fas fa-check"></i> Voice Transcription</li>
+                            </ul>
+                            <button class="btn-premium" onclick="subscribe('monthly')">Subscribe</button>
+                        </div>
+                        <div class="pricing-card popular">
+                            <div class="popular-badge">Best Value</div>
+                            <h3>Yearly</h3>
+                            <div class="price">$49.99<span>/year</span></div>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> All Monthly Features</li>
+                                <li><i class="fas fa-check"></i> 100 Pinned Messages</li>
+                                <li><i class="fas fa-check"></i> Priority Support</li>
+                                <li><i class="fas fa-check"></i> Exclusive Stickers</li>
+                                <li><i class="fas fa-check"></i> 10GB Cloud Storage</li>
+                            </ul>
+                            <button class="btn-premium" onclick="subscribe('yearly')">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation (Telegram Style) -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('chats')">
+                <i class="fas fa-comment"></i>
+                <span>Chats</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('contacts')">
+                <i class="fas fa-address-book"></i>
+                <span>Contacts</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
